@@ -1,0 +1,39 @@
+name: Daily Tech Update
+
+on:
+  schedule:
+    # Esegue alle 06:00 UTC (che sono le 07:00 o 08:00 in Italia a seconda dell'ora legale)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Ti permette di lanciarlo a mano per testare
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: Run Report Generator
+        env:
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python daily_update.py
+
+      - name: Save Report (Commit & Push)
+        run: |
+          git config --global user.name "AI Reporter Bot"
+          git config --global user.email "bot@example.com"
+          git add report_oggi.md
+          git commit -m "Aggiornamento report giornaliero" || echo "Nessun cambiamento da committare"
+          git push
