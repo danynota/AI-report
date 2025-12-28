@@ -60,9 +60,10 @@ def genera_report():
 
     # 5. Salva il report
     output_path = os.path.join(os.path.dirname(__file__), "report_oggi.md")
-    with open(output_path, "w", encoding="utf-8") as f:
+    with open("report_oggi.md", "w", encoding="utf-8") as f:
         f.write(report_content)
 
 if __name__ == "__main__":
     genera_report()
+
     print(f"✅ Fatto! Report salvato in '{os.path.join(os.path.dirname(__file__), 'report_oggi.md')}'")
