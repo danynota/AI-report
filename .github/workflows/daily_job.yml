@@ -2,8 +2,8 @@ name: Daily Tech Update
 
 on:
   schedule:
-    # Esegue alle 06:00 UTC (che sono le 07:00 o 08:00 in Italia a seconda dell'ora legale)
-    - cron: '0 6 * * *'
+    # Esegue alle 04:00 UTC (che sono le 05:00 o 06:00 in Italia a seconda dell'ora legale)
+    - cron: '0 4 * * *'
   workflow_dispatch: # Ti permette di lanciarlo a mano per testare
 
 permissions:
