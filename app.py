@@ -1,31 +1,54 @@
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="Debug Mode")
-st.title("🔧 Modalità Diagnostica")
+# Configurazione pagina
+st.set_page_config(page_title="Tech Daily Briefing", page_icon="☕")
 
-# --- INSERISCI QUI IL TUO LINK ---
-URL = "https://raw.githubusercontent.com/danynota/AI-report/refs/heads/main/report_oggi.md"
-# ---------------------------------
+# ---------------------------------------------------------
+# 👇 INCOLLA QUI LO STESSO LINK CHE HAI USATO NEL DEBUG E CHE DAVA "200"
+URL_REPORT = "INSERISCI_QUI_IL_TUO_LINK_RAW_FUNZIONANTE"
+# ---------------------------------------------------------
 
-st.write(f"Sto provando a scaricare da: `{URL}`")
+def local_css():
+    st.markdown("""
+    <style>
+    .report-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
-try:
-    response = requests.get(URL)
-    st.write(f"Stato della connessione: **{response.status_code}**")
-    
-    if response.status_code == 200:
-        st.success("✅ Connessione riuscita! Ecco le prime 100 lettere del file:")
-        st.code(response.text[:100]) # Mostra solo l'inizio
-        st.divider()
-        st.markdown(response.text) # Prova a mostrarlo tutto
-    elif response.status_code == 404:
-        st.error("❌ Errore 404: File non trovato. O il link è sbagliato, o il Repo è PRIVATO.")
-    else:
-        st.error(f"❌ Errore sconosciuto: {response.status_code}")
-        st.write(response.text)
+def leggi_report_online():
+    try:
+        # Scarica il file (disabilita la cache per essere sicuri di avere l'ultimo)
+        response = requests.get(URL_REPORT, headers={"Cache-Control": "no-cache"})
+        
+        if response.status_code == 200:
+            return response.text
+        else:
+            return "⚠️ Errore: Non riesco a scaricare il report. Controlla il link."
+    except Exception as e:
+        return f"⚠️ Errore di connessione: {e}"
 
-except Exception as e:
-    st.error("❌ L'app è crashata durante il download.")
-    st.error(f"Dettaglio errore: {e}")
+# --- Interfaccia ---
+local_css()
 
+st.title("☕ Il tuo Briefing Tech")
+st.caption("Le notizie più importanti di ieri, selezionate dall'AI.")
+st.divider()
+
+# Carica il report
+contenuto = leggi_report_online()
+
+if "⚠️" in contenuto:
+    st.error(contenuto)
+else:
+    # Mostra il report
+    st.markdown(contenuto)
+
+# Footer
+st.divider()
+st.caption("Aggiornato automaticamente ogni mattina alle 07:00 • Powered by Gemini & GitHub")
