@@ -5,7 +5,7 @@ st.set_page_config(page_title="Debug Mode")
 st.title("🔧 Modalità Diagnostica")
 
 # --- INSERISCI QUI IL TUO LINK ---
-URL = "INSERISCI_QUI_IL_TUO_LINK_RAW"
+URL = "https://raw.githubusercontent.com/danynota/AI-report/refs/heads/main/report_oggi.md"
 # ---------------------------------
 
 st.write(f"Sto provando a scaricare da: `{URL}`")
@@ -28,3 +28,4 @@ try:
 except Exception as e:
     st.error("❌ L'app è crashata durante il download.")
     st.error(f"Dettaglio errore: {e}")
+
