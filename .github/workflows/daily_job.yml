@@ -28,7 +28,7 @@ jobs:
         env:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python daily_update.py
+        run: python daily-update.py
 
       - name: Save Report (Commit & Push)
         run: |
