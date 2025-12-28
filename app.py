@@ -6,7 +6,7 @@ st.set_page_config(page_title="Tech Daily Briefing", page_icon="☕")
 
 # ---------------------------------------------------------
 # 👇 INCOLLA QUI LO STESSO LINK CHE HAI USATO NEL DEBUG E CHE DAVA "200"
-URL_REPORT = "INSERISCI_QUI_IL_TUO_LINK_RAW_FUNZIONANTE"
+URL_REPORT = "https://raw.githubusercontent.com/danynota/AI-report/refs/heads/main/report_oggi.md"
 # ---------------------------------------------------------
 
 def local_css():
@@ -52,3 +52,4 @@ else:
 # Footer
 st.divider()
 st.caption("Aggiornato automaticamente ogni mattina alle 07:00 • Powered by Gemini & GitHub")
+
