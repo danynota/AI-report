@@ -36,22 +36,25 @@ def genera_report():
     
     # 3. Prompt per Gemini
     prompt = f"""
-    Sei un esperto giornalista tech. Analizza queste notizie grezze del giorno {data_str}:
+    Sei un curatore editoriale tech esperto. Il tuo compito è filtrare il rumore e fornire solo i fatti.
     
+    Analizza queste notizie grezze del {data_str}:
     {context_news}
     
-    Scrivi un report sintetico in Italiano usando la formattazione Markdown.
-    Struttura richiesta:
-    # 🗞️ Tech Report del {data_str}
+    Crea un report essenziale in Italiano (Markdown).
     
-    ## 🚀 Top News
-    (Descrivi le 2-3 notizie più importanti in dettaglio)
+    STRUTTURA OBBLIGATORIA:
+    # 🗞️ Tech Briefing del {data_str}
     
-    ## ⚡ In Breve
-    (Elenco puntato rapido delle altre notizie)
+    ## ⚡ Flash News (Tech, AI)
+    (Qui inserisci una lista puntata. OGNI punto deve seguire rigorosamente questo formato:
+    * [Titolo della notizia in Italiano](URL_ORIGINALE) - Una singola frase sintetica che spiega la notizia.)
     
-    ---
-    *Fonti incluse nel testo.*
+    REGOLE:
+    - Niente intro o conclusioni ("Ecco il report..."). Vai dritto al punto.
+    - Usa SOLO le notizie presenti nel contesto.
+    - Il titolo deve essere il link (Markdown syntax).
+    - Massimo 10-12 punti totali.
     """
 
     # 4. Generazione (Google Gemini)
@@ -67,3 +70,4 @@ if __name__ == "__main__":
     genera_report()
 
     print(f"✅ Fatto! Report salvato in '{os.path.join(os.path.dirname(__file__), 'report_oggi.md')}'")
+
