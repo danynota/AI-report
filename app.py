@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import requests
+import yfinance as yf
 # Configurazione della pagina (Titolo e Icona)
 st.set_page_config(page_title="Tech Daily Briefing", page_icon="☕")
 URL_REPORT = "https://raw.githubusercontent.com/danynota/AI-report/refs/heads/main/report_oggi.md"
@@ -70,3 +71,4 @@ st.markdown(contenuto)
 st.divider()
 
 st.text("Aggiornato automaticamente ogni mattina alle 07:00")
+
