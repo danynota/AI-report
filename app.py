@@ -21,8 +21,7 @@ def leggi_report_online():
 #Funzione ticker
 def mostra_ticker_tech():
     """Mostra l'andamento delle Big Tech legate all'AI"""
-    # NVIDIA, Google, Microsoft, Apple
-    simboli = ["1NVDA", "1GOOGL", "1MSFT", "META.MI", "VWCE.MI"]
+    simboli = ["1NVDA.MI", "1GOOGL.MI", "1FB.MI", "1MSFT.MI", "VWCE.MI", "SXR8.DE"]
     
     # Scarica i dati (cache per non rallentare troppo)
     cols = st.columns(len(simboli))
@@ -71,6 +70,7 @@ st.markdown(contenuto)
 st.divider()
 
 st.text("Aggiornato automaticamente ogni mattina alle 07:00")
+
 
 
 
