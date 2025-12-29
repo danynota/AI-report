@@ -1,55 +1,72 @@
 import streamlit as st
+import os
 import requests
-
-# Configurazione pagina
+# Configurazione della pagina (Titolo e Icona)
 st.set_page_config(page_title="Tech Daily Briefing", page_icon="☕")
-
-# ---------------------------------------------------------
-# 👇 INCOLLA QUI LO STESSO LINK CHE HAI USATO NEL DEBUG E CHE DAVA "200"
 URL_REPORT = "https://raw.githubusercontent.com/danynota/AI-report/refs/heads/main/report_oggi.md"
-# ---------------------------------------------------------
-
+#Leggi file da web
+def leggi_report_online():
+    try:
+        # Scarica il file direttamente da GitHub
+        response = requests.get(URL_REPORT)
+        
+        # Se il file esiste (codice 200), restituisce il testo
+        if response.status_code == 200:
+            return response.text
+        else:
+            return "⚠️ Errore: Non riesco a scaricare il report da GitHub."
+    except Exception as e:
+        return f"⚠️ Errore di connessione: {e}"
+#Funzione ticker
+def mostra_ticker_tech():
+    """Mostra l'andamento delle Big Tech legate all'AI"""
+    # NVIDIA, Google, Microsoft, Apple
+    simboli = ["NVDA", "GOOGL", "MSFT", "AAPL"]
+    
+    # Scarica i dati (cache per non rallentare troppo)
+    cols = st.columns(len(simboli))
+    
+    try:
+        for i, sym in enumerate(simboli):
+            ticker = yf.Ticker(sym)
+            history = ticker.history(period="1d", interval="1m")
+            
+            if not history.empty:
+                current = history['Close'].iloc[-1]
+                open_price = history['Open'].iloc[0]
+                delta = current - open_price
+                
+                cols[i].metric(
+                    label=sym, 
+                    value=f"{current:.1f}$", 
+                    delta=f"{delta:.2f}$"
+                )
+    except:
+        st.caption("Dati di borsa momentaneamente non disponibili.")
+# Funzione per caricare il CSS personalizzato (Opzionale, per renderlo più carino)
 def local_css():
     st.markdown("""
     <style>
-    .report-container {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    .main {
+        background-color: #f0f2f6;
+    }
+    h1 {
+        color: #1f77b4;
     }
     </style>
     """, unsafe_allow_html=True)
 
-def leggi_report_online():
-    try:
-        # Scarica il file (disabilita la cache per essere sicuri di avere l'ultimo)
-        response = requests.get(URL_REPORT, headers={"Cache-Control": "no-cache"})
-        
-        if response.status_code == 200:
-            return response.text
-        else:
-            return "⚠️ Errore: Non riesco a scaricare il report. Controlla il link."
-    except Exception as e:
-        return f"⚠️ Errore di connessione: {e}"
-
-# --- Interfaccia ---
 local_css()
 
+# Titolo Principale
 st.title("☕ Il tuo Briefing Tech")
-st.caption("Le notizie più importanti di ieri, selezionate dall'AI.")
+st.caption("Le notizie più importanti di ieri, riassunte dall'AI.")
+mostra_ticker_tech()
 st.divider()
 
-# Carica il report
 contenuto = leggi_report_online()
-
-if "⚠️" in contenuto:
-    st.error(contenuto)
-else:
-    # Mostra il report
-    st.markdown(contenuto)
-
+st.markdown(contenuto)
 # Footer
 st.divider()
-st.caption("Aggiornato automaticamente ogni mattina alle 07:00 • Powered by Gemini & GitHub")
 
+st.text("Aggiornato automaticamente ogni mattina alle 07:00")
