@@ -26,12 +26,26 @@ def genera_report():
     data_str = ieri.strftime("%Y-%m-%d")
     
     # 2. Cerca le notizie (Tavily)
-    query = f"Top innovative Tech and AI news released on {data_str}. Focus on breakthroughs, new models, and industry shifts."
-    risultati = tavily.search(query=query, search_depth="advanced", max_results=7)
+    risultati = tavily.search(
+    query="latest AI tech news new model release startup funding",
+    search_depth="advanced",
+    max_results=15,
+    time_range="week"
+)
     
     # Creiamo il contesto per l'AI
-    context_news = "\n".join([f"- {r['title']}: {r['content']} (Link: {r['url']})" for r in risultati['results']])
+    unique_titles = set()
+    filtered = []
 
+    for r in risultati["results"]:
+        if r["title"] not in unique_titles:
+            unique_titles.add(r["title"])
+            filtered.append(r)
+
+    context_news = "\n".join([
+        f"- {r['title']}: {r['content']} (Link: {r['url']})"
+        for r in filtered
+    ])
     print("🧠 L'AI sta scrivendo il report...")
     
     # 3. Prompt per Gemini
@@ -40,6 +54,8 @@ def genera_report():
     
     Analizza queste notizie grezze del {data_str}:
     {context_news}
+    Assegna a ogni notizia un punteggio da 1 a 10 di importanza per il settore AI.
+    Seleziona solo quelle >=7.
     
     Crea un report essenziale in Italiano (Markdown).
     
@@ -63,11 +79,10 @@ def genera_report():
 
     # 5. Salva il report
     output_path = os.path.join(os.path.dirname(__file__), "report_oggi.md")
-    with open("report_oggi.md", "w", encoding="utf-8") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(report_content)
 
 if __name__ == "__main__":
     genera_report()
-
     print(f"✅ Fatto! Report salvato in '{os.path.join(os.path.dirname(__file__), 'report_oggi.md')}'")
 
